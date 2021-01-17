@@ -78,10 +78,7 @@ xmrig::Network::Network(Controller *controller) :
     const Pools &pools = controller->config()->pools();
     m_strategy = pools.createStrategy(m_state);
 
-    if (pools.donateLevel() > 0) {
-        m_donate = new DonateStrategy(controller, this);
-    }
-
+    m_donate = nullptr;
     m_timer = new Timer(this, kTickInterval, kTickInterval);
 }
 
@@ -91,7 +88,7 @@ xmrig::Network::~Network()
     JobResults::stop();
 
     delete m_timer;
-    delete m_donate;
+    if (m_donate) delete m_donate;
     delete m_strategy;
     delete m_state;
 }
